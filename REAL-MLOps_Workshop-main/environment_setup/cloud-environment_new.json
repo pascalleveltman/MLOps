@@ -1,0 +1,87 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "baseName": {
+        "type": "string",
+        "maxLength": 10,
+        "minLength": 3,
+        "metadata": {
+            "description": "The base name to use as prefix to create all the resources."
+        }
+    },
+    "location": {
+        "type": "string",
+        "defaultValue": "eastus",
+        "allowedValues": [
+            "eastus",
+            "eastus2",
+            "southcentralus",
+            "southeastasia",
+            "westcentralus",
+            "australiaeast",
+            "westeurope",
+            "westus2",
+            "centralus"
+        ],
+        "metadata": {
+            "description": "Specifies the location for all resources."
+        }
+    },
+    "workspace": {
+        "type": "string"
+    },
+    "storageAccount": {
+        "type": "string"
+    }
+  },
+  "variables": {
+    "amlWorkspaceName": "[parameters('workspace')]",
+    "storageAccountName": "[parameters('storageAccount')]",
+    "storageAccountType": "Standard"
+  },
+  "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageAccountName')]",
+            "apiVersion": "2022-09-01",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard_RAGRS"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "supportsHttpsTrafficOnly": true,
+                "accessTier": "Hot",
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true
+            }
+        }
+    ]
+  // "resources": [
+  //   {
+  //     "type": "Microsoft.Storage/storageAccounts",
+  //     "apiVersion": "2022-09-01",
+  //     "name": "[variables('storageAccountName')]",
+  //     "location": "[parameters('location')]",
+  //     "sku": {
+  //       "name": "[variables('storageAccountType')]"
+  //     },
+  //     "kind": "StorageV2",
+  //     "properties": {
+  //       "encryption": {
+  //         "services": {
+  //           "blob": {
+  //             "enabled": true
+  //           },
+  //           "file": {
+  //             "enabled": true
+  //           }
+  //         },
+  //         "keySource": "Microsoft.Storage"
+  //       },
+  //       "supportsHttpsTrafficOnly": true
+  //     }
+  //   }
+  // ]
+}
